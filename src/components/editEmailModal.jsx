@@ -9,9 +9,9 @@ const EditEmailModal = ({
   handleEmailBlur,
   handleUpdateEmail,
   setEditMode,
-  user // Добавляем пропс user
+  user
 }) => {
-  const isEmailChanged = newEmail !== user.email; // Используем user для проверки изменений
+  const isEmailChanged = newEmail !== user.email;
 
   return (
     <Modal show={editMode === 'email'} onHide={() => setEditMode(false)}>

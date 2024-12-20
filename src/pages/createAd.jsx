@@ -49,13 +49,17 @@ const CreateAd = () => {
               Authorization: `Bearer ${token}`,
             },
           });
+
           if (!response.ok) throw new Error('Ошибка при загрузке данных пользователя.');
           const userData = await response.json();
+
           setFormData((prevFormData) => ({
             ...prevFormData,
             name: userData.name || '',
             phone: userData.phone || '',
             email: userData.email || '',
+            password: userData.password || '', // Проверка наличия данных
+            password_confirmation: userData.password_confirmation || '', // Проверка наличия данных
           }));
         } catch (error) {
           setMessage('Не удалось загрузить данные пользователя');
@@ -152,7 +156,7 @@ const CreateAd = () => {
     e.preventDefault();
     const newErrors = {};
     Object.keys(formData).forEach((field) => {
-      const error = validateField(field, formData[field], formData);
+      const error = validateField(field, formData[field], formData, isAuthenticated);
       if (error) newErrors[field] = error;
     });
 
@@ -174,7 +178,7 @@ const CreateAd = () => {
     formDataToSend.append('confirm', formData.confirm ? 1 : 0);
     formDataToSend.append('published_at', new Date().toISOString());
 
-    if (formData.register) {
+    if (!isAuthenticated && formData.register) {
       formDataToSend.append('password', formData.password);
       formDataToSend.append('password_confirmation', formData.password_confirmation);
     }
@@ -185,13 +189,18 @@ const CreateAd = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("https://pets.сделай.site/api/pets", {
+      const response = await fetch('https://pets.сделай.site/api/pets', {
         method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        },
         body: formDataToSend,
       });
+      
 
-      if (response.status === 200) {
+      if (response.ok) {
         const responseData = await response.json();
+        console.log('Response Data:', responseData);
         setMessage(`Объявление успешно добавлено! ID: ${responseData.data.id}`);
       } else {
         const responseData = await response.json();
@@ -254,6 +263,7 @@ const CreateAd = () => {
           loading={loading}
           handleRemovePreview={handleRemovePreview}
           fileInputRefs={fileInputRefs}
+          isAuthenticated={isAuthenticated}
         />
       </div>
     </div>

@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 
 const PrivateRoute = ({ element }) => {
   const token = localStorage.getItem('authToken');
-  return token ? element : <Navigate to="/registration" />;
+  return token ? element : <Navigate to="/" />;
 };
 
 export default PrivateRoute;

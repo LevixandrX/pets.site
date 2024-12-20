@@ -1,4 +1,4 @@
-export const validateField = (name, value, formData) => {
+export const validateField = (name, value = '', formData = {}, isAuthenticated) => {
   let errorMessage = '';
 
   switch (name) {
@@ -27,18 +27,22 @@ export const validateField = (name, value, formData) => {
       break;
 
     case 'password':
-      if (value.trim() && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{7,}$/.test(value)) {
-        errorMessage = 'Пароль должен содержать минимум 7 символов, 1 цифру, 1 строчную и 1 заглавную букву';
-      } else if (!value.trim()) {
-        errorMessage = 'Пароль обязателен';
+      if (!isAuthenticated) {
+        if (!value.trim()) {
+          errorMessage = 'Пароль обязателен';
+        } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{7,}$/.test(value)) {
+          errorMessage = 'Пароль должен содержать минимум 7 символов, 1 цифру, 1 строчную и 1 заглавную букву';
+        }
       }
       break;
 
     case 'password_confirmation':
-      if (formData.password && value.trim() && formData.password !== value) {
-        errorMessage = 'Пароли не совпадают';
-      } else if (!value.trim()) {
-        errorMessage = 'Подтверждение пароля обязательно';
+      if (!isAuthenticated) {
+        if (!value.trim()) {
+          errorMessage = 'Подтверждение пароля обязательно';
+        } else if (formData.password && value !== formData.password) {
+          errorMessage = 'Пароли не совпадают';
+        }
       }
       break;
 
@@ -58,21 +62,21 @@ export const validateField = (name, value, formData) => {
       break;
 
     case 'kind':
-      errorMessage = value.trim() === '' ? 'Укажите вид животного' : '';
+      if (!value.trim()) {
+        errorMessage = 'Укажите вид животного';
+      }
       break;
 
     case 'district':
-      errorMessage = value.trim() === '' ? 'Укажите район' : '';
-      break;
-
-    case 'mark':
-      break;
-
-    case 'description':
+      if (!value.trim()) {
+        errorMessage = 'Укажите район';
+      }
       break;
 
     case 'confirm':
-      errorMessage = value === 0 ? 'Подтверждение обязательно' : '';
+      if (!value) {
+        errorMessage = 'Подтверждение обязательно';
+      }
       break;
 
     default:

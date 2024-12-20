@@ -9,7 +9,8 @@ const AdForm = ({
   handleSubmit,
   loading,
   handleRemovePreview,
-  fileInputRefs
+  fileInputRefs,
+  isAuthenticated
 }) => (
   <form onSubmit={handleSubmit}>
     <FormField
@@ -39,16 +40,19 @@ const AdForm = ({
       onChange={handleChange}
       onKeyDown={(e) => handleKeyDown(e, 'register')}
     />
-    <FormField
-      id="register"
-      label="Автоматическая регистрация"
-      type="checkbox"
-      value={formData.register}
-      error={errors.register}
-      onChange={handleChange}
-      onKeyDown={(e) => handleKeyDown(e, 'password')}
-    />
-    {formData.register && (
+    {!isAuthenticated && (
+      <FormField
+        id="register"
+        label="Автоматическая регистрация"
+        type="checkbox"
+        value={formData.register}
+        error={errors.register}
+        onChange={handleChange}
+        onKeyDown={(e) => handleKeyDown(e, 'password')}
+      />
+    )}
+
+    {!isAuthenticated && formData.register && (
       <>
         <FormField
           id="password"
@@ -69,6 +73,16 @@ const AdForm = ({
           onKeyDown={(e) => handleKeyDown(e, 'photo1')}
         />
       </>
+    )}
+
+    {isAuthenticated && (
+      <FormField
+        id="sendAnonymously"
+        label="Отправить анонимно"
+        type="checkbox"
+        value={formData.sendAnonymously}
+        onChange={handleChange}
+      />
     )}
     <FormField
       id="kind"

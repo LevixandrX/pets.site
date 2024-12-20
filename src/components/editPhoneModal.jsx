@@ -9,9 +9,9 @@ const EditPhoneModal = ({
   handlePhoneBlur,
   handleUpdatePhone,
   setEditMode,
-  user // Добавляем пропс user
+  user
 }) => {
-  const isPhoneChanged = newPhone !== user.phone; // Используем user для проверки изменений
+  const isPhoneChanged = newPhone !== user.phone;
 
   return (
     <Modal show={editMode === 'phone'} onHide={() => setEditMode(false)}>

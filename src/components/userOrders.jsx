@@ -31,6 +31,7 @@ const UserOrders = ({ token }) => {
 
                 const data = await response.json();
                 if (data.data.orders) {
+                    console.log('Fetched Orders:', data.data.orders);
                     setOrders(data.data.orders);
                     setFilteredOrders(data.data.orders);
                     setTotalPages(Math.ceil(data.data.orders.length / 6));
@@ -136,7 +137,7 @@ const UserOrders = ({ token }) => {
                     </Dropdown.Menu>
                 </Dropdown>
             </div>
-            
+
             <div className="container py-4">
                 <div className="row row-cols-1 row-cols-md-3 g-4">
                     {currentOrders.length > 0 ? (
